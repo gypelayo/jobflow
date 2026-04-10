@@ -1,7 +1,7 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "JobFlow - AI Job Tracker",
-  "version": "0.4.0",
+  "version": "0.1.4",
   "description": "Extract job postings with AI and track your applications locally.",
   "icons": {
     "16": "icons/16/icon.png",
@@ -13,17 +13,16 @@
     "scripting",
     "webNavigation",
     "storage",
-    "tabs",
+    "tabs"
+  ],
+  "host_permissions": [
     "<all_urls>",
     "http://localhost/*"
   ],
   "background": {
-    "scripts": [
-      "background.js"
-    ],
-    "persistent": true
+    "scripts": ["background.js"]
   },
-  "browser_action": {
+  "action": {
     "default_title": "JobFlow",
     "default_popup": "popup.html",
     "default_icon": {
@@ -32,10 +31,19 @@
       "128": "icons/128/icon.png"
     }
   },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "web_accessible_resources": [
-    "assets/sql-wasm.wasm"
+    {
+      "resources": ["assets/sql-wasm.wasm"],
+      "matches": ["<all_urls>"]
+    }
   ],
-  "content_security_policy": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src 'self' http://localhost:* https://api.perplexity.ai https://boards-api.greenhouse.io https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://api.github.com https://github.com",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src 'self' http://localhost:* https://api.perplexity.ai https://boards-api.greenhouse.io https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://api.jobflow.app"
+  },
   "browser_specific_settings": {
     "gecko": {
       "id": "jobflow@example.com"
