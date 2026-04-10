@@ -204,7 +204,7 @@ describe('SettingsTab', () => {
 
   it('renders version info', () => {
     const { getByText } = render(<SettingsTab />);
-    expect(getByText('0.4.0')).toBeTruthy();
+    expect(getByText('0.1.1')).toBeTruthy();
   });
 
   it('exports database on button click', async () => {
