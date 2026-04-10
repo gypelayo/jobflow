@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "JobFlow - AI Job Tracker",
-  "version": "0.4.0",
+  "version": "0.1.3",
   "description": "Extract job postings with AI and track your applications locally.",
   "icons": {
     "16": "icons/16/icon.png",

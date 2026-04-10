@@ -51,9 +51,9 @@ function createStorageArea() {
 const chromeMock = {
   runtime: {
     id: 'test-extension-id',
-    version: '0.4.0',
+    version: '0.1.3',
     lastError: null as { message: string } | null,
-    getManifest: () => ({ version: '0.4.0' }),
+    getManifest: () => ({ version: '0.1.3' }),
     getURL: (path: string) => `chrome-extension://test-extension-id/${path}`,
     sendNativeMessage: vi.fn(),
     sendMessage: vi.fn(),
