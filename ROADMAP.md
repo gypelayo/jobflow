@@ -13,16 +13,16 @@
 
 ## Active
 
-- **Bundle licensing** — license key infrastructure for the Job Search Bundle ([#41](https://github.com/gypelayo/jobflow/issues/41)) ✅
-- **CV generation gate** — CV generation gated behind active bundle ([#42](https://github.com/gypelayo/jobflow/issues/42)) ✅
-- **Paywall UI** — inline locked-state component for gated features ([#43](https://github.com/gypelayo/jobflow/issues/43)) ✅
+- **Bundle licensing** — license key infrastructure for the Job Search Bundle ✅
+- **CV generation gate** — CV generation gated behind active bundle ✅
+- **Paywall UI** — inline locked-state component for gated features ✅
 
 ## Backlog
 
-- **Insights engine** — surface patterns from the user's own data: response rate by company size, skill correlation, seniority mismatch warnings ([#35](https://github.com/gypelayo/jobflow/issues/35))
-- **Multiple profiles** — separate pipelines and analytics per search strategy
-- **Hosted AI** — no API key required for extractions, bundle-only ([#44](https://github.com/gypelayo/jobflow/issues/44))
-- **Demo mode** — seeded data so users see analytics before entering any jobs
+- **Insights engine** — surface patterns from the user's own data: response rate by company size, skill correlation, seniority mismatch warnings ([#1](https://github.com/gypelayo/jobflow/issues/1))
+- **Multiple profiles** — separate pipelines and analytics per search strategy ([#2](https://github.com/gypelayo/jobflow/issues/2))
+- **Hosted AI** — no API key required for extractions, bundle-only ([#3](https://github.com/gypelayo/jobflow/issues/3))
+- **Demo mode** — seeded data so users see analytics before entering any jobs ([#4](https://github.com/gypelayo/jobflow/issues/4))
 
 ## Pricing
 
