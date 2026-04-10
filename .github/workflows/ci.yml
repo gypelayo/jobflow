@@ -162,7 +162,9 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
+        continue-on-error: true
 
       - name: Deploy
         id: deploy
         uses: actions/deploy-pages@v4
+        continue-on-error: true
