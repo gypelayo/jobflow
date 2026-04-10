@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobFlow Privacy Policy</title>
+    <link rel="icon" type="image/png" href="icons/48/icon.png">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: #0d1117;
+            min-height: 100vh;
+            color: #e6edf3;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #161b22;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            padding: 40px;
+        }
+        
+        h1 {
+            margin-top: 0;
+            background: linear-gradient(135deg, #22d3ee 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        h2 {
+            color: #22d3ee;
+            margin-top: 30px;
+        }
+        
+        a {
+            color: #22d3ee;
+        }
+        
+        strong {
+            color: #e6edf3;
+        }
+        
+        .version-info {
+            text-align: center;
+            color: #8b949e;
+            font-size: 0.9em;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #30363d;
+        }
+        
+        ul {
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JobFlow Privacy Policy</h1>
+        <p><strong>Last updated:</strong> April 2026</p>
+        
+        <h2>Overview</h2>
+        <p>JobFlow is a browser extension designed to help you track job applications. Your privacy is important to us.</p>
+        
+        <h2>Data Collection</h2>
+        <p>JobFlow stores all data <strong>locally in your browser</strong>. We do not have access to your data. Data is stored using:</p>
+        <ul>
+            <li><strong>IndexedDB</strong> — Stores your job applications, notes, and pipeline data</li>
+            <li><strong>Chrome Storage API</strong> — Stores extension settings and preferences</li>
+        </ul>
+        
+        <h2>External Services</h2>
+        <p>JobFlow may send data to external AI providers <strong>only when you explicitly request</strong> job extraction. The data sent includes:</p>
+        <ul>
+            <li>The content of the job posting page you're currently viewing</li>
+        </ul>
+        
+        <p>Supported AI providers:</p>
+        <ul>
+            <li>OpenAI (api.openai.com)</li>
+            <li>Anthropic (api.anthropic.com)</li>
+            <li>Google (generativelanguage.googleapis.com)</li>
+            <li>Perplexity (api.perplexity.ai)</li>
+            <li>Ollama (localhost:11434) — local, no data leaves your machine</li>
+        </ul>
+        
+        <p><strong>We do not collect, store, or transmit your job data to any of our servers.</strong></p>
+        
+        <h2>Permissions</h2>
+        <p>JobFlow requests the following permissions:</p>
+        <ul>
+            <li><strong><code>&lt;all_urls&gt;</code></strong> — Required to read job posting content from any website for AI extraction</li>
+            <li><strong><code>activeTab</code></strong> — Required to extract content from the current tab when you click the extension</li>
+            <li><strong><code>storage</code></strong> — Required to save your settings and job data locally</li>
+            <li><strong><code>tabs</code></strong> — Required to manage extension popup windows</li>
+        </ul>
+        
+        <h2>Analytics</h2>
+        <p>We use <a href="https://www.goatcounter.com/" target="_blank" rel="noopener">GoatCounter</a> for anonymous, privacy-friendly analytics on our website. This tracks page visits and download counts only — no personal data is collected.</p>
+        
+        <h2>Data Retention</h2>
+        <p>All your data remains in your browser. You can:</p>
+        <ul>
+            <li>Export your data at any time using the Export feature in the dashboard</li>
+            <li>Clear all data by uninstalling the extension or using the Clear Data feature</li>
+        </ul>
+        
+        <h2>Third-Party Services</h2>
+        <p>JobFlow uses the following third-party libraries:</p>
+        <ul>
+            <li><a href="https://sql.js.org/" target="_blank" rel="noopener">sql.js</a> — SQLite compiled to WebAssembly for local database operations</li>
+            <li><a href="https://www.chartjs.org/" target="_blank" rel="noopener">Chart.js</a> — For analytics visualizations</li>
+            <li><a href="https://artskydj.github.io/jsPDF/docs/" target="_blank" rel="noopener">jsPDF</a> — For PDF resume generation</li>
+        </ul>
+        
+        <h2>Changes to This Policy</h2>
+        <p>We may update this privacy policy from time to time. Any changes will be posted on this page.</p>
+        
+        <h2>Contact</h2>
+        <p>If you have questions about this privacy policy, please contact us via <a href="https://github.com/gypelayo/job-tool/issues" target="_blank" rel="noopener">GitHub Issues</a>.</p>
+        
+        <div class="version-info">
+            <p>JobFlow Extension v0.4.0</p>
+        </div>
+    </div>
+</body>
+</html>

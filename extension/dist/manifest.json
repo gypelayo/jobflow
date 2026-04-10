@@ -1,0 +1,44 @@
+{
+  "manifest_version": 2,
+  "name": "JobFlow - AI Job Tracker",
+  "version": "0.4.0",
+  "description": "Extract job postings with AI and track your applications locally.",
+  "icons": {
+    "16": "icons/16/icon.png",
+    "48": "icons/48/icon.png",
+    "128": "icons/128/icon.png"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "webNavigation",
+    "storage",
+    "tabs",
+    "<all_urls>",
+    "http://localhost/*"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_title": "JobFlow",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/16/icon.png",
+      "48": "icons/48/icon.png",
+      "128": "icons/128/icon.png"
+    }
+  },
+  "web_accessible_resources": [
+    "assets/sql-wasm.wasm"
+  ],
+  "content_security_policy": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; connect-src 'self' http://localhost:* https://api.perplexity.ai https://boards-api.greenhouse.io https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://api.github.com https://github.com",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "jobflow@example.com"
+    }
+  }
+}

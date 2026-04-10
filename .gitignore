@@ -1,0 +1,39 @@
+# Build output
+extension/dashboard/dist/
+
+# Dependencies
+extension/dashboard/node_modules/
+
+# Coverage reports
+extension/dashboard/coverage/
+
+# Playwright
+extension/dashboard/test-results/
+extension/dashboard/playwright-report/
+extension/dashboard/.playwright/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.orig

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobFlow Icon Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .icon-preview { margin: 10px; display: inline-block; text-align: center; }
+        .icon-preview img { border: 1px solid #ddd; margin-bottom: 5px; }
+        canvas { display: none; }
+        .download-section { margin-top: 20px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>JobFlow Icon Generator</h1>
+    <p>Generate PNG icons in various sizes from the SVG source</p>
+    
+    <div class="icon-preview">
+        <h3>Original SVG</h3>
+        <img id="svgPreview" width="128" height="128">
+    </div>
+    
+    <div class="download-section">
+        <h3>Generate PNG Icons</h3>
+        <button onclick="generateIcons()">Generate All Sizes</button>
+        <div id="iconContainer"></div>
+    </div>
+    
+    <script>
+        const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="secondaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06B6D4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="64" cy="64" r="56" fill="url(#primaryGradient)" filter="url(#shadow)"/>
+  
+  <!-- Briefcase Body -->
+  <rect x="32" y="42" width="64" height="40" rx="4" ry="4" fill="white" opacity="0.95"/>
+  
+  <!-- Briefcase Handle -->
+  <rect x="54" y="34" width="20" height="8" rx="4" ry="4" fill="white" opacity="0.8"/>
+  
+  <!-- Briefcase Lock/Clasp -->
+  <rect x="61" y="50" width="6" height="4" rx="1" ry="1" fill="url(#secondaryGradient)"/>
+  
+  <!-- AI/Flow Elements - Connecting Dots -->
+  <circle cx="42" cy="52" r="2" fill="url(#secondaryGradient)" opacity="0.8"/>
+  <circle cx="52" cy="58" r="2" fill="url(#secondaryGradient)" opacity="0.8"/>
+  <circle cx="76" cy="58" r="2" fill="url(#secondaryGradient)" opacity="0.8"/>
+  <circle cx="86" cy="52" r="2" fill="url(#secondaryGradient)" opacity="0.8"/>
+  
+  <!-- Connecting Lines (Flow) -->
+  <path d="M42 52 L52 58 L76 58 L86 52" stroke="url(#secondaryGradient)" stroke-width="1.5" fill="none" opacity="0.6"/>
+  
+  <!-- Small AI Spark -->
+  <circle cx="76" cy="46" r="1.5" fill="#FFD700" opacity="0.9"/>
+  <path d="M76 43 L77.5 45.5 L76 46 L74.5 45.5 Z" fill="#FFD700" opacity="0.9"/>
+  
+  <!-- Bottom section detail -->
+  <rect x="36" y="68" width="56" height="2" rx="1" fill="url(#secondaryGradient)" opacity="0.3"/>
+</svg>`;
+        
+        // Display SVG preview
+        const svgBlob = new Blob([svgContent], { type: 'image/svg+xml' });
+        const svgUrl = URL.createObjectURL(svgBlob);
+        document.getElementById('svgPreview').src = svgUrl;
+        
+        function generateIcons() {
+            const sizes = [16, 32, 48, 96, 128, 192, 512];
+            const container = document.getElementById('iconContainer');
+            container.innerHTML = '';
+            
+            sizes.forEach(size => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                const img = new Image();
+                img.onload = function() {
+                    ctx.drawImage(img, 0, 0, size, size);
+                    
+                    // Create download link
+                    canvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        
+                        const previewDiv = document.createElement('div');
+                        previewDiv.className = 'icon-preview';
+                        
+                        const previewImg = document.createElement('img');
+                        previewImg.src = url;
+                        previewImg.width = size > 64 ? 64 : size;
+                        previewImg.height = size > 64 ? 64 : size;
+                        
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = url;
+                        downloadLink.download = `jobflow-icon-${size}x${size}.png`;
+                        downloadLink.textContent = `Download ${size}x${size}`;
+                        downloadLink.style.display = 'block';
+                        
+                        const sizeLabel = document.createElement('div');
+                        sizeLabel.textContent = `${size}x${size}px`;
+                        sizeLabel.style.fontSize = '12px';
+                        sizeLabel.style.color = '#666';
+                        
+                        previewDiv.appendChild(previewImg);
+                        previewDiv.appendChild(sizeLabel);
+                        previewDiv.appendChild(downloadLink);
+                        
+                        container.appendChild(previewDiv);
+                    }, 'image/png');
+                };
+                img.src = svgUrl;
+            });
+        }
+    </script>
+</body>
+</html>

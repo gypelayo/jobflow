@@ -1,0 +1,36 @@
+{
+  "name": "jobflow-dashboard",
+  "private": true,
+  "version": "0.4.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.1",
+    "jspdf": "^2.5.2",
+    "preact": "^10.25.4",
+    "sql.js": "^1.14.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@preact/preset-vite": "^2.9.4",
+    "@testing-library/preact": "^3.2.4",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/jsdom": "^28.0.1",
+    "@vitest/coverage-v8": "^3.0.5",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vitest": "^3.0.5"
+  }
+}

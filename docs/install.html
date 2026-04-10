@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Install JobFlow - AI Job Tracker</title>
+    <meta name="description" content="Step-by-step installation guide for JobFlow browser extension. Chrome and Firefox instructions.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="icons/32/icon.svg">
+    <link rel="icon" type="image/svg+xml" sizes="16x16" href="icons/16/icon.svg">
+    <link rel="icon" type="image/svg+xml" sizes="32x32" href="icons/32/icon.svg">
+    <link rel="icon" type="image/svg+xml" sizes="48x48" href="icons/48/icon.svg">
+    <meta name="theme-color" content="#0d1117">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-base: #0d1117;
+            --bg-surface: #161b22;
+            --bg-elevated: #1c2128;
+            --bg-hover: #21262d;
+            --border-default: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #484f58;
+            --accent-cyan: #22d3ee;
+            --accent-purple: #a78bfa;
+            --accent-green: #3fb950;
+            --accent-orange: #d29922;
+            --accent-red: #f85149;
+            --accent-gradient: linear-gradient(135deg, #22d3ee 0%, #a78bfa 100%);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-base);
+        }
+
+        ::selection {
+            background: rgba(34, 211, 238, 0.3);
+        }
+
+        a { color: var(--accent-cyan); text-decoration: none; transition: color 0.15s; }
+        a:hover { color: var(--accent-purple); }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header */
+        header {
+            background: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-default);
+            padding: 0.75rem 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+            color: #0d1117;
+            -webkit-text-fill-color: #0d1117;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: color 0.15s;
+        }
+        nav a:hover { color: var(--text-primary); }
+
+        /* Intro */
+        .intro {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .intro h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .intro p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Tabs */
+        .browser-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 1.5rem;
+            background: var(--bg-base);
+            border-radius: var(--radius-sm);
+            padding: 3px;
+            width: fit-content;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            font-family: var(--font-sans);
+            color: var(--text-secondary);
+            border-radius: 4px;
+            transition: all 0.15s;
+        }
+
+        .tab-button:hover { color: var(--text-primary); background: var(--bg-hover); }
+
+        .tab-button.active {
+            background: var(--bg-elevated);
+            color: var(--accent-cyan);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Steps */
+        .step {
+            display: flex;
+            margin-bottom: 1.75rem;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .step-number {
+            background: var(--bg-elevated);
+            color: var(--accent-cyan);
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+            border: 1px solid var(--border-default);
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .code {
+            background: var(--bg-elevated);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+        }
+
+        code {
+            background: var(--bg-elevated);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+        }
+
+        .warning {
+            background: rgba(210, 153, 34, 0.08);
+            border: 1px solid rgba(210, 153, 34, 0.2);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .warning h4 { color: var(--accent-orange); margin-bottom: 0.25rem; font-size: 0.9rem; }
+        .warning p { color: var(--text-secondary); font-size: 0.85rem; margin: 0; }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.25rem;
+            background: var(--accent-gradient);
+            color: #0d1117;
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin: 0.75rem 0;
+            transition: transform 0.15s, box-shadow 0.15s;
+            box-shadow: 0 2px 8px rgba(34, 211, 238, 0.2);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(34, 211, 238, 0.3);
+            color: #0d1117;
+        }
+
+        /* Troubleshooting */
+        .troubleshooting {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            margin: 2.5rem 0;
+        }
+
+        .troubleshooting h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.25rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .faq-item {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        .faq-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        .faq-question {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .faq-answer { color: var(--text-secondary); font-size: 0.85rem; }
+
+        /* Next steps */
+        .next-steps {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            text-align: center;
+            margin: 2.5rem 0;
+        }
+
+        .next-steps h2 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .next-steps p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            .intro h1 { font-size: 1.75rem; }
+            .browser-tabs { flex-direction: column; width: 100%; }
+            .tab-button { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <span class="logo-icon">JF</span>
+                    JobFlow
+                </a>
+                <nav>
+                    <a href="index.html">&larr; Back to Home</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="intro">
+            <h1>Install JobFlow</h1>
+            <p>Installation takes about 2 minutes</p>
+        </div>
+
+        <div class="browser-tabs">
+            <button class="tab-button active" onclick="showTab('chrome', this)">Chrome</button>
+            <button class="tab-button" onclick="showTab('firefox', this)">Firefox</button>
+        </div>
+
+        <div id="chrome" class="tab-content active">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Download the extension</h3>
+                    <p>Click the button below to get the latest Chrome version:</p>
+                    <a href="#" id="chrome-download-link" class="download-btn">Download for Chrome</a>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Unzip the file</h3>
+                    <p>Extract the ZIP to a folder. Remember the location.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Open extensions page</h3>
+                    <p>Go to <span class="code">chrome://extensions/</span> in Chrome, or click the three-dot menu &rarr; Extensions &rarr; Manage Extensions</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Enable Developer mode</h3>
+                    <p>Toggle the "Developer mode" switch in the top-right corner.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>Load the extension</h3>
+                    <p>Click "Load unpacked" and select the unzipped folder.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">6</div>
+                <div class="step-content">
+                    <h3>You're done</h3>
+                    <p>The JobFlow icon should appear in your toolbar. Click it to start tracking.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="firefox" class="tab-content">
+            <div class="warning">
+                <h4>Temporary installation</h4>
+                <p>Firefox temporary add-ons are removed when you close the browser. We're working on official Firefox Add-on store approval.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Download the extension</h3>
+                    <p>Click the button below to get the latest Firefox version:</p>
+                    <a href="#" id="firefox-download-link" class="download-btn">Download for Firefox</a>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Unzip the file</h3>
+                    <p>Extract the ZIP to a folder on your computer.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Open Firefox debugging</h3>
+                    <p>Go to <span class="code">about:debugging#/runtime/this-firefox</span> in Firefox</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Load temporary add-on</h3>
+                    <p>Click "Load Temporary Add-on" and select any file from the unzipped folder (e.g., manifest.json).</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>Extension loaded</h3>
+                    <p>JobFlow appears in your toolbar. Note: you'll need to repeat this after restarting Firefox.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-steps">
+            <h2>Next steps</h2>
+            <p>After installation, configure your AI provider in Settings.</p>
+            <p>Recommended: get an OpenAI API key, or install Ollama for local processing.</p>
+            <a href="index.html#providers" class="download-btn">View AI Providers &rarr;</a>
+        </div>
+
+        <div class="troubleshooting">
+            <h2>Troubleshooting</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">Extension icon doesn't appear</div>
+                <div class="faq-answer">Check that the extension is enabled in <span class="code">chrome://extensions/</span> or <span class="code">about:addons</span>. You may need to pin it to the toolbar.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">"Load unpacked" is grayed out</div>
+                <div class="faq-answer">Make sure "Developer mode" is enabled in the top-right corner of the Extensions page.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">"No LLM provider configured"</div>
+                <div class="faq-answer">Click the JobFlow icon &rarr; Settings and configure an AI provider, or install <a href="https://ollama.ai/" target="_blank">Ollama</a> for local processing.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Firefox extension disappears after restart</div>
+                <div class="faq-answer">This is expected with temporary add-ons. We're working on Firefox Add-on store approval.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Found a bug?</div>
+                <div class="faq-answer"><a href="https://github.com/gypelayo/job-tool/issues" target="_blank">Report on GitHub</a>.</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showTab(browser, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            document.getElementById(browser).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        async function loadDownloadLinks() {
+            try {
+                const response = await fetch('https://api.github.com/repos/gypelayo/job-tool/releases/latest');
+                const release = await response.json();
+                const chromeAsset = release.assets.find(a => a.name.includes('chrome'));
+                const firefoxAsset = release.assets.find(a => a.name.includes('firefox'));
+                if (chromeAsset) document.getElementById('chrome-download-link').href = chromeAsset.browser_download_url;
+                if (firefoxAsset) document.getElementById('firefox-download-link').href = firefoxAsset.browser_download_url;
+            } catch (e) { console.error('Failed to load download links:', e); }
+        }
+        document.addEventListener('DOMContentLoaded', loadDownloadLinks);
+    </script>
+</body>
+</html>

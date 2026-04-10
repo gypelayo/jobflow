@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GitHub API Debug - JobFlow</title>
+    <link rel="icon" type="image/svg+xml" href="docs/icons/32/icon.svg">
+    <link rel="icon" type="image/svg+xml" sizes="16x16" href="docs/icons/16/icon.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background: #f8fafc;
+        }
+        button {
+            background: #4F46E5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #3730A3;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>GitHub API Test</h1>
+    <div id="result"></div>
+    <button onclick="testAPI()">Test API</button>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing...';
+            
+            try {
+                console.log('Fetching from GitHub API...');
+                const response = await fetch('https://api.github.com/repos/gypelayo/job-tool/releases/latest');
+                
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const release = await response.json();
+                console.log('Release data:', release);
+                
+                const version = release.tag_name;
+                const chromeAsset = release.assets.find(asset => asset.name.includes('chrome'));
+                const firefoxAsset = release.assets.find(asset => asset.name.includes('firefox'));
+                
+                resultDiv.innerHTML = `
+                    <h2>Success!</h2>
+                    <p><strong>Version:</strong> ${version}</p>
+                    <p><strong>Chrome Asset:</strong> ${chromeAsset ? chromeAsset.name : 'Not found'}</p>
+                    <p><strong>Firefox Asset:</strong> ${firefoxAsset ? firefoxAsset.name : 'Not found'}</p>
+                    <p><strong>Chrome URL:</strong> <a href="${chromeAsset?.browser_download_url || '#'}">${chromeAsset?.browser_download_url || 'N/A'}</a></p>
+                    <p><strong>Firefox URL:</strong> <a href="${firefoxAsset?.browser_download_url || '#'}">${firefoxAsset?.browser_download_url || 'N/A'}</a></p>
+                `;
+                
+            } catch (error) {
+                console.error('API Error:', error);
+                resultDiv.innerHTML = `<h2>Error:</h2><p>${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

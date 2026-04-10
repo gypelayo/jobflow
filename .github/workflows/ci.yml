@@ -1,0 +1,168 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Version bump
+        required: false
+        default: auto
+        type: choice
+        options:
+          - auto
+          - patch
+          - minor
+          - major
+
+jobs:
+  ci:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: extension/dashboard/package-lock.json
+
+      - run: cd extension/dashboard && npm ci
+
+      - run: cd extension/dashboard && npm run lint
+
+      - run: cd extension/dashboard && npm test
+
+  release:
+    name: Release
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: extension/dashboard/package-lock.json
+
+      - run: cd extension/dashboard && npm ci
+
+      - name: Version
+        id: version
+        run: |
+          LAST_TAG=$(git tag -l | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || echo "")
+          LAST_VERSION=${LAST_TAG#v}
+          if [ -z "$LAST_VERSION" ]; then LAST_VERSION="0.1.0"; fi
+          echo "last=$LAST_VERSION" >> $GITHUB_OUTPUT
+
+          BUMP="${{ github.event.inputs.bump || 'auto' }}"
+          if [ "$BUMP" = "auto" ]; then
+            RANGE="${LAST_TAG:-HEAD~10}"
+            MSG=$(git log $RANGE..HEAD --oneline 2>/dev/null | head -20)
+            if echo "$MSG" | grep -qiE "BREAKING CHANGE|:boom:"; then BUMP="major"
+            elif echo "$MSG" | grep -qiE "feat|:sparkles:"; then BUMP="minor"
+            else BUMP="patch"; fi
+          fi
+          echo "bump=$BUMP" >> $GITHUB_OUTPUT
+
+          NEW=$(python3 -c "v='$LAST_VERSION'.split('.');m,n,p=int(v[0]),int(v[1]),int(v[2]);exec(\"if '$BUMP'=='major':m+=1;n=0;p=0\\nelif '$BUMP'=='minor':n+=1;p=0\\nelse:p+=1\");print(f'{m}.{n}.{p}')")
+          echo "new=$NEW" >> $GITHUB_OUTPUT
+          echo "tag=v$NEW" >> $GITHUB_OUTPUT
+
+      - name: Update Versions
+        run: |
+          NEW_VERSION=${{ steps.version.outputs.new }}
+          
+          # Update package.json
+          cd extension/dashboard
+          npm version $NEW_VERSION --no-git-tag-version
+          cd ../..
+          
+          # Update manifest files
+          sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$NEW_VERSION\"/" extension/manifest.json
+          sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$NEW_VERSION\"/" extension/manifest_chrome.json
+          
+          # Update options.html
+          sed -i "s/JobFlow Extension v[0-9]*\.[0-9]*\.[0-9]*/JobFlow Extension v$NEW_VERSION/" extension/options.html
+          
+          # Update test setup
+          sed -i "s/version: '[0-9]*\.[0-9]*\.[0-9]*'/version: '$NEW_VERSION'/g" extension/dashboard/src/test/setup.ts
+          sed -i "s/getManifest: () => ({ version: '[0-9]*\.[0-9]*\.[0-9]*' })/getManifest: () => ({ version: '$NEW_VERSION' })/g" extension/dashboard/src/test/setup.ts
+          
+          # Update SettingsTab test assertions
+          sed -i "s/getByText('0\.[0-9]*\.[0-9]*')/getByText('$NEW_VERSION')/g" extension/dashboard/src/components/SettingsTab.test.tsx
+          
+          # Update privacy policy page
+          sed -i "s/JobFlow Extension v[0-9]*\.[0-9]*\.[0-9]*/JobFlow Extension v$NEW_VERSION/" docs/privacy-policy.html
+
+      - name: Build
+        run: cd extension/dashboard && npm run build
+
+      - name: Package
+        run: |
+          mkdir -p releases
+          cd extension
+          cp manifest_chrome.json dist/manifest.json
+          cd dist
+          zip -r "../../releases/jobflow-chrome-${{ steps.version.outputs.tag }}.zip" . -x "*.DS_Store"
+          cd ..
+          cp manifest.json dist/manifest.json
+          cd dist
+          zip -r "../../releases/jobflow-firefox-${{ steps.version.outputs.tag }}.zip" . -x "*.DS_Store"
+
+      - name: Notes
+        run: |
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          RANGE="${TAG:-HEAD~10}"
+          CHANGES=$(git log $RANGE..HEAD --oneline --pretty="format:- %s" 2>/dev/null | head -15 || echo "- Maintenance")
+          echo "## JobFlow ${{ steps.version.outputs.tag }}" > release_notes.md
+          echo "" >> release_notes.md
+          echo "### Changes" >> release_notes.md
+          echo "$CHANGES" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "Download from the Releases page." >> release_notes.md
+
+      - name: Tag
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Release ${{ steps.version.outputs.tag }}"
+          git tag "${{ steps.version.outputs.tag }}"
+          git push origin "${{ steps.version.outputs.tag }}" --force
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: JobFlow ${{ steps.version.outputs.tag }}
+          body_path: release_notes.md
+          files: |
+            releases/jobflow-chrome-${{ steps.version.outputs.tag }}.zip
+            releases/jobflow-firefox-${{ steps.version.outputs.tag }}.zip
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy
+        id: deploy
+        uses: actions/deploy-pages@v4
