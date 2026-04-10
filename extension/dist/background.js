@@ -7,6 +7,8 @@
  * No native messaging — everything runs in-browser.
  */
 
+const HOSTED_API_URL = 'https://api.jobflow.app';
+
 let frameData = [];
 let extractionTimer = null;
 
@@ -366,7 +368,9 @@ async function processExtractedText(text, tabUrl) {
 
   // Notify popup/dashboard that we're now calling the LLM
   let providerName = "Ollama";
-  if (settings.provider === "openai" && settings.openaiApiKey) {
+  if (settings.provider === "hosted" && settings.licenseKey) {
+    providerName = "JobFlow";
+  } else if (settings.provider === "openai" && settings.openaiApiKey) {
     providerName = "OpenAI";
   } else if (settings.provider === "anthropic" && settings.anthropicApiKey) {
     providerName = "Anthropic";
@@ -381,7 +385,9 @@ async function processExtractedText(text, tabUrl) {
     const prompt = buildExtractionPrompt(text);
     let rawResponse;
 
-    if (settings.provider === "openai" && settings.openaiApiKey) {
+    if (settings.provider === "hosted" && settings.licenseKey) {
+      rawResponse = await callHosted(text, settings.licenseKey);
+    } else if (settings.provider === "openai" && settings.openaiApiKey) {
       const model = settings.openaiModel || "gpt-4o-mini";
       rawResponse = await callOpenAI(prompt, settings.openaiApiKey, model);
     } else if (settings.provider === "anthropic" && settings.anthropicApiKey) {
@@ -431,6 +437,36 @@ async function processExtractedText(text, tabUrl) {
 }
 
 // ========== LLM CLIENTS ==========
+
+async function callHosted(jobText, licenseKey) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 120000);
+
+  try {
+    const resp = await fetch(`${HOSTED_API_URL}/v1/extract`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${licenseKey}`,
+      },
+      body: JSON.stringify({ text: jobText }),
+      signal: controller.signal,
+    });
+
+    if (resp.status === 401) throw new Error("Invalid or expired license key");
+    if (resp.status === 429) throw new Error("Usage limit reached — please try again later");
+    if (!resp.ok) {
+      const body = await resp.text();
+      throw new Error(`Hosted API returned ${resp.status}: ${body}`);
+    }
+
+    const data = await resp.json();
+    // Backend returns the extracted JSON directly as a string
+    return typeof data.result === "string" ? data.result : JSON.stringify(data.result);
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 async function callOllama(prompt, model) {
   const body = { model, prompt, stream: false, format: "json" };
@@ -743,6 +779,7 @@ function getSettings() {
       anthropicModel: "claude-3-5-haiku-20241022",
       geminiApiKey: "",
       geminiModel: "gemini-1.5-flash",
+      licenseKey: "",
     };
     api.storage.sync.get(defaults, (result) => resolve(result));
   });
