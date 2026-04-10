@@ -1,7 +1,7 @@
 # Documentation
 
 ## Website (GitHub Pages)
-Deployed at: https://gypelayo.github.io/job-tool
+Deployed at: https://gypelayo.github.io/jobflow
 
 - [Landing Page](./index.html)
 - [Install Guide](./install.html)

@@ -72,7 +72,7 @@ Semantic versioning: `MAJOR.MINOR.PATCH` (e.g., `0.3.6`)
 
 ## GitHub Pages
 
-The `docs/` folder is deployed to: https://gypelayo.github.io/job-tool
+The `docs/` folder is deployed to: https://gypelayo.github.io/jobflow
 
 This includes:
 - Landing page (`docs/index.html`)

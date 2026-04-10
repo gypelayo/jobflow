@@ -57,7 +57,7 @@ Before submitting to the Chrome Web Store, the following must be resolved:
 
 - [x] **Convert icons to PNG** — Converted SVG icons to PNG at 16, 48, and 128px using ImageMagick. Updated both manifests and build config.
 - [x] **Fix build to copy icons into dist** — Updated `vite.config.ts` to copy PNG icons (`icon.png`) at 16, 48, and 128px into dist. Verified build output.
-- [x] **Add a privacy policy page** — Created `docs/privacy-policy.html` with dark theme matching the extension. This page needs to be hosted (e.g., on GitHub Pages at `https://gypelayo.github.io/job-tool/privacy-policy.html`) and linked in the Chrome Web Store listing.
+- [x] **Add a privacy policy page** — Created `docs/privacy-policy.html` with dark theme matching the extension. This page needs to be hosted (e.g., on GitHub Pages at `https://gypelayo.github.io/jobflow/privacy-policy.html`) and linked in the Chrome Web Store listing.
 - [x] **Prepare `<all_urls>` justification** — The extension needs `<all_urls>` to read job posting content from any site (LinkedIn, Greenhouse, Wellfound, company career pages, etc.) and extract structured job data via AI. Without this permission, the content script cannot scrape job details on arbitrary URLs. No user data is collected or transmitted beyond the user's chosen AI provider endpoint.
 
 **Copy-paste for Chrome Web Store review form:**
@@ -81,9 +81,9 @@ JobFlow is a job application tracker that works on any job posting website. The 
 
 See the [Install Guide](docs/install.html) for step-by-step instructions.
 
-**Chrome:** Download the zip from [Releases](https://github.com/gypelayo/job-tool/releases), unzip, go to `chrome://extensions/`, enable Developer mode, click "Load unpacked".
+**Chrome:** Download the zip from [Releases](https://github.com/gypelayo/jobflow/releases), unzip, go to `chrome://extensions/`, enable Developer mode, click "Load unpacked".
 
-**Firefox:** Download the Firefox zip from [Releases](https://github.com/gypelayo/job-tool/releases), unzip, go to `about:debugging#/runtime/this-firefox`, click "Load Temporary Add-on".
+**Firefox:** Download the Firefox zip from [Releases](https://github.com/gypelayo/jobflow/releases), unzip, go to `about:debugging#/runtime/this-firefox`, click "Load Temporary Add-on".
 
 ## Development
 
@@ -127,7 +127,7 @@ On each release, the CI workflow automatically updates all version references wh
 
 Contributions are welcome! Please:
 
-1. Check [existing issues](https://github.com/gypelayo/job-tool/issues) first
+1. Check [existing issues](https://github.com/gypelayo/jobflow/issues) first
 2. Open an issue before large PRs
 3. Follow the existing code style
 4. Add tests for new features

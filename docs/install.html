@@ -477,7 +477,7 @@
 
             <div class="faq-item">
                 <div class="faq-question">Found a bug?</div>
-                <div class="faq-answer"><a href="https://github.com/gypelayo/job-tool/issues" target="_blank">Report on GitHub</a>.</div>
+                <div class="faq-answer"><a href="https://github.com/gypelayo/jobflow/issues" target="_blank">Report on GitHub</a>.</div>
             </div>
         </div>
     </main>
@@ -492,7 +492,7 @@
 
         async function loadDownloadLinks() {
             try {
-                const response = await fetch('https://api.github.com/repos/gypelayo/job-tool/releases/latest');
+                const response = await fetch('https://api.github.com/repos/gypelayo/jobflow/releases/latest');
                 const release = await response.json();
                 const chromeAsset = release.assets.find(a => a.name.includes('chrome'));
                 const firefoxAsset = release.assets.find(a => a.name.includes('firefox'));
